@@ -1,0 +1,24 @@
+# NOCD Intake Agent AI Knowledge Check - Project Context
+
+## Overview
+Internal enablement tool for NOCD Intake Operations. Managers upload a structured JSON knowledge check (topic, reference material, 3 questions, and rubrics). Intake agents record oral responses via microphone. The system transcribes audio via Groq Whisper, evaluates semantic accuracy via Claude 3.5 Sonnet, traces metrics via Langfuse, and persists everything in Supabase.
+
+## Tech Stack
+- Framework: Next.js 14 (App Router, TypeScript, Tailwind CSS)
+- Auth & Persistence: Supabase (GoTrue Auth, PostgreSQL, Supabase Storage)
+- Audio Capture: HTML5 MediaRecorder API (audio/webm)
+- Speech-to-Text: Groq Cloud API (model: whisper-large-v3)
+- AI Evaluation: Anthropic SDK (model: claude-3-5-sonnet-20241022)
+- Observability: Langfuse SDK (tracing prompt tokens, latency, attempt_id)
+- Icons: lucide-react
+
+## Roles & Access Control
+- 'manager': Access to `/manager/upload`, ability to view published checks.
+- 'agent': Access to `/agent/assess/[checkId]`, ability to submit audio and view `/agent/results/[attemptId]`.
+- Agents must only view their own attempts (enforced via Supabase RLS and Server Action auth checks).
+
+## Core Non-Negotiables
+1. Do not use external CSS libraries other than Tailwind.
+2. Focus AI evaluation on conceptual correctness and clinical boundary adherence (e.g., withholding reassurance). Do not penalize verbal fillers, pacing, or minor transcription quirks.
+3. Transcripts must be displayed directly alongside Claude's feedback so agents can verify what the model evaluated.
+4. Keep all responses modular, fully implemented, and strictly typed. No placeholder comments.
